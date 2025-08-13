@@ -1,7 +1,7 @@
 {
   "name": "trabalhofinal",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+    "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -18,7 +18,8 @@
     "@expo/metro-runtime": "~5.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "latest"
   },
   "private": true
 }
