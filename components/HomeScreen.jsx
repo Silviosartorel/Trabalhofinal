@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
-
+import { LineChart } from 'react-native-chart-kit'; // Importando o gráfico
+import { Dimensions } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   const [idadeAtual, setIdadeAtual] = useState('');
@@ -8,11 +9,12 @@ export default function HomeScreen({ navigation }) {
   const [valorDesejado, setValorDesejado] = useState('');
   const [resultado, setResultado] = useState(null);
   const [prazoMeses, setPrazoMeses] = useState(null);
-  const [acumuladoCom300, setAcumuladoCom300] = useState(null);
+  const [prazoAnos, setPrazoAnos] = useState(null);
+  const [graficoData, setGraficoData] = useState([]); // Armazenando os dados do gráfico
 
   const rentabilidadeMensal = 0.007;
-  const valorTeste = 300; 
 
+  // Função para calcular o investimento mensal necessário e gerar os dados do gráfico
   const calcularInvestimentoMensal = () => {
     const idadeAtualNum = parseInt(idadeAtual);
     const idadeAposentadoriaNum = parseInt(idadeAposentadoria);
@@ -31,14 +33,36 @@ export default function HomeScreen({ navigation }) {
     const meses = (idadeAposentadoriaNum - idadeAtualNum) * 12;
     setPrazoMeses(meses);
 
+    // Convertendo meses para anos
+    const anos = meses / 12;
+    setPrazoAnos(anos.toFixed(1)); // Exibindo anos com 1 casa decimal
+
     // Valor mensal necessário para atingir a meta
     const fator = Math.pow(1 + rentabilidadeMensal, meses);
     const investimentoMensal = (valorDesejadoNum * rentabilidadeMensal) / (fator - 1);
     setResultado(investimentoMensal.toFixed(2));
 
-    // Simulação extra: quanto acumularia com R$ 300 por mês
-    const acumulado = valorTeste * ((Math.pow(1 + rentabilidadeMensal, meses) - 1) / rentabilidadeMensal);
-    setAcumuladoCom300(acumulado.toFixed(2));
+    // Gerar os dados do gráfico de evolução do valor acumulado
+    let valorAcumulado = 0;
+    let dataGrafico = [];
+    for (let i = 1; i <= meses; i++) {
+      valorAcumulado += investimentoMensal * Math.pow(1 + rentabilidadeMensal, i);
+      dataGrafico.push(valorAcumulado.toFixed(2));
+    }
+
+    setGraficoData(dataGrafico); // Atualizar o estado com os dados do gráfico
+  };
+
+  // Configuração do gráfico
+  const chartConfig = {
+    backgroundColor: '#e26a00',
+    backgroundGradientFrom: '#ff9800',
+    backgroundGradientTo: '#ff9800',
+    decimalPlaces: 2, // Exibir até 2 casas decimais
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
   };
 
   return (
@@ -76,9 +100,32 @@ export default function HomeScreen({ navigation }) {
 
         {resultado && (
           <View style={styles.resultBox}>
-            <Text style={styles.resultado}>📌 Prazo total: {prazoMeses} meses</Text>
+            <Text style={styles.resultado}>📌 Prazo total: {prazoMeses} meses, {prazoMeses} anos</Text>
+            <Text style={styles.resultado}>📌 Prazo total: {prazoAnos} anos</Text>
             <Text style={styles.resultado}>📌 Investimento mensal necessário: R$ {resultado}</Text>
-            <Text style={styles.resultado}>📌 Se guardar R$300/mês, acumulará: R$ {acumuladoCom300}</Text>
+          </View>
+        )}
+
+        {/* Exibir o gráfico */}
+        {graficoData.length > 0 && (
+          <View style={styles.chartContainer}>
+            <Text style={styles.chartTitle}>Evolução do valor acumulado ao longo dos meses</Text>
+            <LineChart
+              data={{
+                labels: Array.from({ length: prazoMeses }, (_, i) => `${i + 1}`), // Meses como labels
+                datasets: [
+                  {
+                    data: graficoData.map((val) => parseFloat(val)), // Dados do gráfico
+                    strokeWidth: 2, // Espessura da linha
+                  },
+                ],
+              }}
+              width={Dimensions.get('window').width - 40} // Largura do gráfico (um pouco menor que a largura da tela)
+              height={220} // Altura do gráfico
+              chartConfig={chartConfig} // Configurações do gráfico
+              bezier // Usar curvas suaves
+              style={{ marginVertical: 8 }}
+            />
           </View>
         )}
       </ScrollView>
@@ -125,5 +172,17 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#2e7d32',
     marginBottom: 8,
+  },
+  chartContainer: {
+    marginTop: 30,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
