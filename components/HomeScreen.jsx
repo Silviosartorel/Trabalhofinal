@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   bottomButton: {
-    marginTop: "auto", // empurra o botão para baixo da tela
+    marginTop: "auto", 
   },
   buttonText: {
     fontSize: 18,
