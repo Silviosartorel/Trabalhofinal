@@ -48,6 +48,7 @@ export default function Idoso({ navigation }) {
       <ScrollView contentContainerStyle={styles.inner}>
         <Text style={styles.title}>💰 Calculadora de Aposentadoria</Text>
 
+        <Text style={styles.label}>👦 Idade Atual:</Text>
         <TextInput
           style={styles.input}
           placeholder="Idade Atual"
@@ -56,6 +57,7 @@ export default function Idoso({ navigation }) {
           onChangeText={setIdadeAtual}
         />
 
+        <Text style={styles.label}>👴 Idade para Aposentar:</Text>
         <TextInput
           style={styles.input}
           placeholder="Idade para Aposentar"
@@ -64,6 +66,7 @@ export default function Idoso({ navigation }) {
           onChangeText={setIdadeAposentadoria}
         />
 
+        <Text style={styles.label}>💰 Valor Desejado (R$):</Text>
         <TextInput
           style={styles.input}
           placeholder="Valor Desejado (R$)"

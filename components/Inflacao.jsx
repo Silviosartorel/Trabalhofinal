@@ -30,6 +30,7 @@ export default function Inflacao() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>💰 Calculadora de Inflação</Text>
 
+      <Text style={styles.label}>💰 Valor Atual (R$):</Text>
       <TextInput
         style={styles.input}
         placeholder="Valor Atual (R$)"
@@ -37,6 +38,7 @@ export default function Inflacao() {
         value={valorAtual}
         onChangeText={setValorAtual}
       />
+      <Text style={styles.label}>📊 Taxa de Inflação (R$):</Text>
       <TextInput
         style={styles.input}
         placeholder="Taxa de Inflação Anual (%)"
@@ -44,6 +46,7 @@ export default function Inflacao() {
         value={inflacao}
         onChangeText={setInflacao}
       />
+      <Text style={styles.label}>⏳ Tempo (anos) (R$):</Text>
       <TextInput
         style={styles.input}
         placeholder="Tempo (anos)"
@@ -89,7 +92,6 @@ export default function Inflacao() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    alignItems: "center",
     backgroundColor: "#fff0f6",
     minHeight: "100%",
   },
@@ -103,6 +105,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
+  label: { fontSize: 16, marginBottom: 6, color: "#333", fontWeight: "500", textAlign:'left' },
   input: {
     width: "100%",
     borderWidth: 1,
